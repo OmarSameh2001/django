@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home - Schools & Classrooms Management</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'school/styles.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to Schools & Classrooms Management</h1>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <a href="{% url 'school-list' %}" class="view-button">View Schools</a>
+        <a href="{% url 'classroom-list' %}" class="view-button">View Classrooms</a>
+    </div>
+
+    <hr>
+
+    <!-- Add New School Form -->
+    <h3>Add New School</h3>
+    <form method="post" action="{% url 'add-school' %}">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            <label>School Name:</label><br>
+            {{ school_form.name }}
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Number of Classes:</label><br>
+            {{ school_form.number_of_classes }}
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="flex: 1;">
+                <label for="school_length">Length (meters):</label>
+                <input type="number" id="school_length" step="0.1" required>
+            </div>
+            <div style="flex: 1;">
+                <label for="school_width">Width (meters):</label>
+                <input type="number" id="school_width" step="0.1" required>
+            </div>
+        </div>
+        
+        <!-- Hidden area input for school -->
+        <input type="hidden" name="area" id="school_area">
+
+        <div class="center-button-container">
+            <button type="submit" onclick="calculateSchoolArea()">Add School</button>
+        </div>
+        
+    </form>
+
+    <hr>
+
+    <!-- Add New Classroom Form -->
+    <h3>Add New Classroom</h3>
+    <form method="post" action="{% url 'add-classroom' %}">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            <label>Classroom Name:</label><br>
+            {{ classroom_form.name }}
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="flex: 1;">
+                <label for="classroom_length">Length (meters):</label>
+                <input type="number" id="classroom_length" step="0.1" required>
+            </div>
+            <div style="flex: 1;">
+                <label for="classroom_width">Width (meters):</label>
+                <input type="number" id="classroom_width" step="0.1" required>
+            </div>
+        </div>
+        
+        <!-- Hidden area input for classroom -->
+        <input type="hidden" name="area" id="classroom_area">
+
+        <div style="margin-bottom: 10px;">
+            <label>School:</label><br>
+            {{ classroom_form.school }}
+        </div>
+
+        <div  class="center-button-container">
+            <button type="submit" onclick="calculateClassroomArea()">Add Classroom</button>
+        </div>
+    </form>
+
+    <hr>
+
+    <!-- Delete School Section -->
+    <h3>Delete School</h3>
+    <form method="post" action="{% url 'delete-school' %}">
+        {% csrf_token %}
+        <div style="margin-bottom: 10px;">
+            {{ delete_school_form.school.label_tag }}<br>
+            {{ delete_school_form.school }}
+        </div>
+        <div  class="center-button-container">
+            <button type="submit" style="background-color: red;">Delete School</button>
+        </div>
+    </form>
+
+    {% if success_message %}
+        <div class="success-message">{{ success_message }}</div>
+    {% endif %}
+</div>
+
+<script>
+function calculateSchoolArea() {
+    const length = parseFloat(document.getElementById('school_length').value);
+    const width = parseFloat(document.getElementById('school_width').value);
+    if (!isNaN(length) && !isNaN(width)) {
+        document.getElementById('school_area').value = (length * width).toFixed(2);
+    } else {
+        alert("Please enter valid length and width for the school!");
+        event.preventDefault();
+    }
+}
+
+function calculateClassroomArea() {
+    const length = parseFloat(document.getElementById('classroom_length').value);
+    const width = parseFloat(document.getElementById('classroom_width').value);
+    if (!isNaN(length) && !isNaN(width)) {
+        document.getElementById('classroom_area').value = (length * width).toFixed(2);
+    } else {
+        alert("Please enter valid length and width for the classroom!");
+        event.preventDefault();
+    }
+}
+</script>
+
+</body>
+</html>

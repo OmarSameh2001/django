@@ -1,0 +1,47 @@
+{% load school_filters %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Classrooms List</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'school/styles.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h1>Classrooms List</h1>
+
+    <a href="{% url 'home' %}" class="btn">Home</a>
+
+    <!-- Search Form -->
+    <form class="form-button-container" method="get" action="">
+        <input type="text" name="search" placeholder="Search classrooms by name..." value="{{ search }}">
+        <button type="submit">Search</button>
+        <button type="button" onclick="clearSearch()">Clear</button>
+    </form>
+
+    <!-- Classroom List -->
+    <ul>
+        {% for classroom in classrooms|filter_by_name:search %}
+            <li class="school-item"> <!-- Reuse the same class for consistent design -->
+                <span class="school-name">{{ classroom.name }}</span> <!-- Classroom name as the title -->
+                <span class="school-details">
+                    Area: {{ classroom.area|floatformat:2 }} m - School: {{ classroom.school.name }}
+                </span>
+            </li>
+            {% empty %}
+            <li class="no-results">No classrooms found matching {{ search }}</li>
+        {% endfor %}
+        
+    </ul>
+</div>
+
+<script>
+function clearSearch() {
+    window.location.href = window.location.pathname;
+}
+</script>
+
+</body>
+</html>

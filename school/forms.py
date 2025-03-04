@@ -10,3 +10,10 @@ class ClassroomForm(forms.ModelForm):
     class Meta:
         model = Classroom
         fields = '__all__'
+
+class DeleteSchoolForm(forms.Form):
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        empty_label="---------",
+        label="Select School"
+    )
